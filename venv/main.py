@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy.orm import declarative_base, Session
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, create_engine, inspect
+from sqlalchemy import Column, create_engine, inspect, select
 from sqlalchemy import Integer, String, ForeignKey
 
 Base = declarative_base()
@@ -64,3 +64,13 @@ with Session(engine) as session:
     # Enviando para o BD (persistência de dados)
     session.add_all([juliana, sandy, patrick])
     session.commit()
+    
+stmt = select(User).where(User.name.in_(['juliana']))
+print('Recuperando ususarios a partir de condições de filtragem')
+for user in session.scalars(stmt): 
+    print(user)
+    
+stmt_address = select(Address).where(Address.user_id.in_([2]))
+print('Recuperando os endereçoes de email de Sandy')
+for address in session.scalars(stmt_address):
+    print(address)
